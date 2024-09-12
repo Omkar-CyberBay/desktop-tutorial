@@ -8,9 +8,8 @@ jobs:
     steps:
       - name: Assign Issue to Manager
         run: |
-          MANAGER_USERNAME='Omkar-Net-Mon'
           ISSUE_NUMBER=${{github.event.issue.number}}
 
-          gh issue edit $ISSUE_NUMBER --assignee $MANAGER_USERNAME
+          gh issue edit $ISSUE_NUMBER --assignee Omkar-Net-Mon
           
       
