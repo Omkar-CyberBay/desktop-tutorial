@@ -6,10 +6,6 @@ jobs:
   assign_maneger:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Issue Label
-        if: contains(github.event.issue.labels.*.name, 'approval')
-        run: echo " This Issue is not using the proper template."
-
       - name: Assign Issue to Manager
         run: |
           MANAGER_USERNAME='Omkar-Net-Mon'
