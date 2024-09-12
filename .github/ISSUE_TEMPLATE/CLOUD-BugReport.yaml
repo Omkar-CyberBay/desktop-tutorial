@@ -1,6 +1,7 @@
 name: report bug
 description: Form to report bug
 title: "[Bug-report]: "
+label: ["bug', "approval"]
 #assignees
 body:
   - type: markdown
