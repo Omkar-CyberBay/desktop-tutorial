@@ -1,8 +1,6 @@
 name: Issue Approval Workflow
 
-on:
-  issues:
-    type:[opened, edited]
+on: [issues]
 
 jobs:
   assign_maneger:
