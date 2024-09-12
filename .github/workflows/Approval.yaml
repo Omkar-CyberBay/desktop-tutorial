@@ -1,1 +1,24 @@
+name: Issue Approval Workflow
 
+on:
+  issues:
+    type:[opened, edited]
+
+jobs:
+  assign_maneger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Issue Label
+        if: contains(github.event.issue.labels.*.name, 'approval')
+        run: echo " This Issue is not using the proper template."
+
+      - name: Assign Issue to Manager
+        run: |
+          MANAGER_USERNAME='ArnavKusurkar'
+          curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} \
+          -d '{"assignees":["'"${MANAGER_USERNAME}"'"]}'
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      
