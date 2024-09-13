@@ -11,6 +11,8 @@ jobs:
           ISSUE_NUMBER=${{github.event.issue.number}}
 
           gh issue edit $ISSUE_NUMBER --add-assignee Omkar-CyberBay --repo Omkar-CyberBay/desktop-tutorial
+        env:
+          GH_TOKEN: ${{ github.token }}
 
           
       
