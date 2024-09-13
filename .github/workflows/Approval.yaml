@@ -10,6 +10,7 @@ jobs:
         run: |
           ISSUE_NUMBER=${{github.event.issue.number}}
 
-          gh issue edit $ISSUE_NUMBER --assignee Omkar-Net-Mon
+          gh issue edit $ISSUE_NUMBER --add-assignee Omkar-CyberBay --repo Omkar-CyberBay/desktop-tutorial
+
           
       
