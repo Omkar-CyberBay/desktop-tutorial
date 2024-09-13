@@ -10,14 +10,12 @@ jobs:
         uses: cli/cli-action@v2
         with:
           token: ${{secrets.GH_TOKEN}}
-      
-      - name: Assign Issue to Manager
-        env:
-          GH_TOKEN: ${{secrets.GH_TOKEN}}
-        run: |
+    run: |
           ISSUE_NUMBER=${{github.event.issue.number}}
 
           gh issue edit $ISSUE_NUMBER --add-assignee Omkar-CyberBay --repo Omkar-CyberBay/desktop-tutorial
         
-          
-      
+           - name: Assign Issue to Manager
+                env:
+                    GH_TOKEN: ${{secrets.GH_TOKEN}}
+        
