@@ -6,13 +6,18 @@ jobs:
   assign_maneger:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Github CLI
+        uses: cli/cli-action@v2
+        with:
+          token: ${{secrets.GH_TOKEN}}
+      
       - name: Assign Issue to Manager
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
         run: |
           ISSUE_NUMBER=${{github.event.issue.number}}
 
           gh issue edit $ISSUE_NUMBER --add-assignee Omkar-CyberBay --repo Omkar-CyberBay/desktop-tutorial
-        env:
-          GH_TOKEN: ${{ github.token }}
-
+        
           
       
