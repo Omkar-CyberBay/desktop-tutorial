@@ -1,21 +1,24 @@
 name: Issue Approval Workflow
 
-on: [issues]
+on: 
+  issues:
+    types: [opened, edited, closed]
 
 jobs:
-  assign_maneger:
+  assign_manager:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Github CLI
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub CLI
         uses: cli/cli-action@v2
         with:
-          token: ${{secrets.GH_TOKEN}}
-    run: |
-          ISSUE_NUMBER=${{github.event.issue.number}}
+          token: ${{ secrets.GH_TOKEN }}
 
+      - name: Assign Issue to Manager
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
           gh issue edit $ISSUE_NUMBER --add-assignee Omkar-CyberBay --repo Omkar-CyberBay/desktop-tutorial
-        
-           - name: Assign Issue to Manager
-                env:
-                    GH_TOKEN: ${{secrets.GH_TOKEN}}
-        
