@@ -16,4 +16,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
-          gh issue edit $ISSUE_NUMBER --add-assignee ArnavKusurkar --repo Omkar-CyberBay/desktop-tutorial
+          gh issue edit $ISSUE_NUMBER --add-assignee Omkar-net-mon --repo Omkar-CyberBay/desktop-tutorial
