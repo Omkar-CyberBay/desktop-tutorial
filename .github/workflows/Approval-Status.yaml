@@ -1,0 +1,19 @@
+name: Forward on Approval
+
+on:
+  issues: [commented]
+
+jobs:
+  forward-issue:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify team of approval
+        run: |
+          echo "This issue has been approved by the manager."
+          gh issue comment ${{ github.event.issue.number }} --body "This setup request has been approved by the manager and is now assigned to the next team for execution."
+      - name: Assign to the next team
+        uses: actions-ecosystem/action-issue-label-assigner@v1
+        with:
+          labels: 'team-review'
+          assignees: 'Omkar-Net-Mon'
