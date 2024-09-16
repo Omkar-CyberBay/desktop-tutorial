@@ -15,6 +15,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+      - name: Authenticate with GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          echo $GH_TOKEN | gh auth login --with-token
         
       - name: Assign Issue to Manager
         env:
@@ -33,17 +38,13 @@ jobs:
             echo "next_step=0" >> $GITHUB_ENV
           fi
       - name: Forward Issue to Next Team if Complete
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: env.next_step == '1'
         run: |
-          gh auth login --with-token <<< ${{ secrets.GH_TOKEN }}
           gh issue comment ${{ github.event.issue.number }} --body "The product manager has approved this issue. Forwarding it to the next team."
           gh issue edit ${{ github.event.issue.number }} --add-assignee "ArnavKusurkar"
       - name: Close Issue as Not Planned
         if: env.next_step == '0'
         run: |
-          gh auth login --with-token <<< ${{ secrets.GH_TOKEN }}
           gh issue comment ${{ github.event.issue.number }} --body "The product manager has marked this issue as 'not planned'. Closing it."
           gh issue edit ${{ github.event.issue.number }} --state closed
 
