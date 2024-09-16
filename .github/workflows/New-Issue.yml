@@ -1,0 +1,22 @@
+name: Create New Issue on Submission
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-new-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - name: Create a New Issue
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          ISSUE_TITLE="${{ github.event.issue.title }} - Duplicate"
+          ISSUE_BODY="${{ github.event.issue.body }}"
+        
+          gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label "duplicate"
+      
