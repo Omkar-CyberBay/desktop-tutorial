@@ -22,8 +22,6 @@ jobs:
           gh auth login --with-token <<< $GH_TOKEN
         
       - name: Assign Issue to Manager
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
           gh issue edit $ISSUE_NUMBER --add-assignee Omkar-Net-Mon --repo Omkar-CyberBay/desktop-tutorial
