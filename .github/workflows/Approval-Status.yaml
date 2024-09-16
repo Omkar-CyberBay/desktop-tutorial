@@ -1,7 +1,8 @@
 name: Forward on Approval
 
 on:
-  issues: [commented]
+  issues:
+    types:[opened, commented, labeled]
 
 jobs:
   forward-issue:
