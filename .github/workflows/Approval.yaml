@@ -2,7 +2,7 @@ name: Issue Approval Workflow
 
 on: 
   issues:
-    types: [opened, edited, closed]
+    types: [opened, edited, closed, labeled]
 
 jobs:
   assign_manager:
@@ -17,3 +17,21 @@ jobs:
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
           gh issue edit $ISSUE_NUMBER --add-assignee ArnavKusurkar --repo Omkar-CyberBay/desktop-tutorial
+
+      - name: Check Manager's Label
+        run: |
+          if [[ "${{ github.event.label.name }}" == "complete" ]]; then
+            echo "Issue marked as complete. Forwarding to the next team."
+            echo "next_step=1" >> $GITHUB_ENV
+          elif [[ "${{ github.event.label.name }}" == "not-planned" ]]; then
+            echo "Issue marked as not planned. Closing the issue."
+            echo "next_step=0" >> $GITHUB_ENV
+          fi
+      - name: Forward Issue to Next Team if Complete
+        if: env.next_step == '1'
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --body "The product manager has approved this issue. Forwarding it to the next team."
+          gh issue edit ${{ github.event.issue.number }} --add-assignee "next-team-username"
+          
+      
+          
