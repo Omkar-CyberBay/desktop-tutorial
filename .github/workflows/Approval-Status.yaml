@@ -6,8 +6,8 @@ on:
 
 jobs:
   forward-issue:
-    if: github.event.label.name == 'approved'
     runs-on: ubuntu-latest
+    if: github.event.label.name == 'approved'
     steps:
       - name: Notify team of approval
         run: |
