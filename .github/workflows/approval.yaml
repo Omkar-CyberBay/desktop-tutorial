@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Duplicate the Bug Report Issue
         uses: actions-ecosystem/action-create-issue@v1
-         with:
+        with:
           token: ${{ secrets.GH_TOKEN }}
           title: ${{ github.event.issue.title }}
           body: ${{ github.event.issue.body }}
