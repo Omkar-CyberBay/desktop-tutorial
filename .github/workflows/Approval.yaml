@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
-          gh issue edit $ISSUE_NUMBER --add-assignee ArnavKusurkar --repo Omkar-CyberBay/desktop-tutorial
+          gh issue edit $ISSUE_NUMBER --add-assignee Omkar-Net-Mon --repo Omkar-CyberBay/desktop-tutorial
 
       - name: Check Manager Label
         run: |
@@ -36,7 +36,7 @@ jobs:
         if: env.next_step == '1'
         run: |
           gh issue comment ${{ github.event.issue.number }} --body "The product manager has approved this issue. Forwarding it to the next team."
-          gh issue edit ${{ github.event.issue.number }} --add-assignee "Omkar-Net-Mon"
+          gh issue edit ${{ github.event.issue.number }} --add-assignee "ArnavKusurkar"
       - name: Close Issue as Not Planned
         if: env.next_step == '0'
         run: |
