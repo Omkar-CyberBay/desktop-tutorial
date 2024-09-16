@@ -23,7 +23,7 @@ jobs:
           ISSUE_NUMBER=${{ github.event.issue.number }}
           gh issue edit $ISSUE_NUMBER --add-assignee ArnavKusurkar --repo Omkar-CyberBay/desktop-tutorial
 
-      - name: Check Manager's Label
+      - name: Check Manager Label
         run: |
           if [[ "${{ github.event.label.name }}" == "complete" ]]; then
             echo "Issue marked as complete. Forwarding to the next team."
@@ -37,6 +37,12 @@ jobs:
         run: |
           gh issue comment ${{ github.event.issue.number }} --body "The product manager has approved this issue. Forwarding it to the next team."
           gh issue edit ${{ github.event.issue.number }} --add-assignee "Omkar-Net-Mon"
+      - name: Close Issue as Not Planned
+        if: env.next_step == '0'
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --body "The product manager has marked this issue as 'not planned'. Closing it."
+          gh issue edit ${{ github.event.issue.number }} --state closed
+
           
       
           
