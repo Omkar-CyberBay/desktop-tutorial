@@ -1,7 +1,7 @@
 name: Duplicate and Assign Bug Report Issue
 on:
   issues:
-    types: [opened]
+    types: [opened, closed]
 
 jobs:
   duplicate_issue:
