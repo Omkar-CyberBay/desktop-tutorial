@@ -7,6 +7,9 @@ jobs:
   create-new-issue:
     runs-on: ubuntu-latest
     steps:
+      - name: Authenticate GitHub CLI
+        run: echo $GITHUB_TOKEN | gh auth login --with-token
+
       - name: Check out the repository
         uses: actions/checkout@v2
       - name: Create a New Issue
