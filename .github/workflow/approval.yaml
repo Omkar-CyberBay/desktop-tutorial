@@ -1,0 +1,37 @@
+name: Duplicate and Assign Bug Report Issue
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  duplicate_issue:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'POC')
+    steps:
+      - name: Duplicate the Bug Report Issue
+        uses: actions-ecosystem/action-create-issue@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          title: ${{ github.event.issue.title }}
+          body: |
+            **Customer Name**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "customer-name")).value }}
+
+            **Summary**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "summary")).value }}
+
+            **Description**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "description")).value }}
+
+            **Environment Type**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "environment-type")).value }}
+
+            **Priority**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "priority")).value }}
+
+            **Outcome Expected**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "outcome-expected")).value }}
+
+            **UAT Feedback**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "uat-feedback")).value }}
+
+            **Review Due Date**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "review-due-date")).value }}
+
+            **Working As Desired**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "working-as-desired")).value }}
+
+            **Service Feedback**: ${{ github.event.issue.body | fromJSON | select(.[] | select(.id == "service-feedback")).value }}
+          labels: ${{ toJSON(github.event.issue.labels.*.name) }}
+          assignees: ArnavKusurkar
