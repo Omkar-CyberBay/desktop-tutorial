@@ -1,30 +1,34 @@
-name: "Manager Review"
+name: "Manager Review Workflow"
+
 on:
   issues:
-    types: [opened,labeled]
+    types: [labeled]
 
 jobs:
   manager-review:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Manager Action
-        if: contains(github.event.issue.labels.*.name, 'complete') || contains(github.event.issue.labels.*.name, 'not-planned')
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check Manager's Label
         run: |
-          if [[ "${{ github.event.issue.labels.*.name }}" == *"complete"* ]]; then
-            echo "continue=1" >> $GITHUB_ENV
-          elif [[ "${{ github.event.issue.labels.*.name }}" == *"not-planned"* ]]; then
-            echo "continue=0" >> $GITHUB_ENV
+          if [[ "${{ github.event.label.name }}" == "complete" ]]; then
+            echo "Issue marked as complete. Forwarding to the next team."
+            echo "next_step=1" >> $GITHUB_ENV
+          elif [[ "${{ github.event.label.name }}" == "not-planned" ]]; then
+            echo "Issue marked as not planned. Closing the issue."
+            echo "next_step=0" >> $GITHUB_ENV
           fi
 
-      - name: Close as Not Planned
-        if: env.continue == '0'
+      - name: Close Issue as Not Planned
+        if: env.next_step == '0'
         run: |
-          gh issue comment ${{ github.event.issue.number }} --body "This issue is closed as not planned."
-          gh issue edit ${{ github.event.issue.number }} --state closed --label "not-planned"
+          gh issue comment ${{ github.event.issue.number }} --body "The product manager has marked this issue as 'not planned'. Closing it."
+          gh issue edit ${{ github.event.issue.number }} --state closed
 
-      - name: Forward to Next Team if Complete
-        if: env.continue == '1'
+      - name: Forward Issue to Next Team if Complete
+        if: env.next_step == '1'
         run: |
-          gh issue comment ${{ github.event.issue.number }} --body "This issue is marked as complete."
-          gh issue edit ${{ github.event.issue.number }} --label "complete"
-          gh issue edit ${{ github.event.issue.number }} --assignee "next-team-username"
+          gh issue comment ${{ github.event.issue.number }} --body "The product manager has approved this issue. Forwarding it to the next team."
+          gh issue edit ${{ github.event.issue.number }} --add-assignee "next-team-username"
