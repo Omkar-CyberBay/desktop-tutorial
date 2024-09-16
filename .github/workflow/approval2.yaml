@@ -3,7 +3,7 @@ name: Duplicate Issue and Reassign
 # This workflow is triggered when an issue is closed.
 on:
   issues:
-    types: [closed]
+    types: [opened, closed, committed]
 
 jobs:
   duplicate_and_reassign:
