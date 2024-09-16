@@ -1,0 +1,20 @@
+name: Duplicate Issue and Reassign
+
+# This workflow is triggered when an issue is closed.
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  duplicate_and_reassign:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Duplicate the issue and assign it to a new assignee
+      uses: actions-ecosystem/action-create-issue@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}   # Uses the repository token
+        title: ${{ github.event.issue.title }} (Reassigned)  # Keep the original title with "(Reassigned)" appended
+        body: ${{ github.event.issue.body }}   # Use the same issue body (description)
+        labels: ${{ toJSON(github.event.issue.labels.*.name) }}   # Apply the same labels as the original issue
+        assignees: ArnavKusurkar  # Assign the new issue to Person B (replace this with the actual GitHub username)
