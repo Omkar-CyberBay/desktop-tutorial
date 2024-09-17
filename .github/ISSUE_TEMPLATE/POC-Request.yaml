@@ -12,14 +12,14 @@ body:
     id: customer-name
     attributes:
       label: Customer Name
-      placeholder: WayneCorp
+      placeholder: "Enter Customer name"
     validations:
       required: true
   - type: input
     id: cluster-name
     attributes:
       label: Cluster Name
-      placeholder: WayneCorp
+      placeholder: "Cluster name"
     validations:
       required: true
   - type: dropdown
@@ -36,7 +36,7 @@ body:
     id: license-volume
     attributes:
       label: License Volume
-      placeholder: 100 GB/Day
+      placeholder: "100 GB/Day"
     validations:
       required: true
   - type: dropdown
@@ -64,14 +64,14 @@ body:
     id: devices-list
     attributes:
       label: List of devices to integrate
-      placeholder: Windows servers, Sophos firewall, AD and Linux Servers.
+      placeholder: "Windows servers, Sophos firewall, AD and Linux Servers."
     validations:
       required: false
   - type: input
     id: start-date
     attributes:
       label: Setup Start Date
-      placeholder: 2nd July 2024
+      placeholder: "DD/MM/YYYY"
     validations:
       required: true
   - type: checkboxes
