@@ -6,7 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
-    if: "contains(github.event.issue.title, '(Duplicate-Issue)')"
+    if: "contains(github.event.issue.title, '(Duplicate Issue)')"
     runs-on: ubuntu-latest
 
     steps:
