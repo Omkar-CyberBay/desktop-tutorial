@@ -1,0 +1,70 @@
+name: POC Request
+
+on:
+  issues:
+    types: [opened, closed]
+
+jobs:
+  create_duplicate:
+    if: github.event.issue.labels.*.name contains 'POC' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Create Duplicate Issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ASSIGNEE: 'Omkar-Net-Mon'
+
+        run: |
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+
+          # Check for existing duplicate issues with the same title and label 'POC'
+          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0.1${TITLE} Approval" --json number -q '.[] | .number')
+
+          # If no duplicate exists, create one
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "0.1${TITLE} Approval" --body "$BODY" --label "POC" --assignee "$ASSIGNEE"
+            echo "Duplicate issue created and assigned."
+          else
+            echo "A duplicate issue already exists. No action taken."
+          fi
+
+  create_duplicate_after_close:
+    if: github.event.action == 'closed' && github.event.issue.labels.*.name contains 'POC'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Create New Duplicate Issue After Closure
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ORIGINAL_TITLE: ${{ github.event.issue.title }}
+          ASSIGNEE: 'Omkar-Net-Mon' 
+
+        run: |
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+
+          # Check for existing duplicate issues with the same title and label 'POC'
+          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0.2${ORIGINAL_TITLE} Split " --json number -q '.[] | .number')
+
+          # If no duplicate exists, create one
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "0.2${ORIGINAL_TITLE} Split" --body "$BODY" --label "POC" --assignee "$ASSIGNEE"
+            echo "New duplicate issue created after closure."
+          else
+            echo "A duplicate issue already exists. No action taken."
+          fi
