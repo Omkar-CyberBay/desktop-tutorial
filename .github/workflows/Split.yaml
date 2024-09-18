@@ -1,0 +1,36 @@
+name: Duplicate Issue
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  duplicate_issues:
+    if: contains(github.event.issue.labels.*.name, 'POC')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Duplicate the issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ASSIGNEE: 'Omkar-Net-Mon'
+        run: |
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0.2 ${TITLE} Approval" --json number -q '.[] | .number')
+
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "0.2 $TITLE Approval" --body "$BODY" --assignee "$ASSIGNEE"
+            echo "Duplicate issue created."
+          else
+            echo "Duplicate issue already exists. No action taken."
+          fi
+
+          
