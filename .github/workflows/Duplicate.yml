@@ -2,11 +2,10 @@ name: Duplicate Issue
 
 on:
   issues:
-    types: [closed]
+    types: [opened]
 
 jobs:
   duplicate_issue:
-    if: "contains(github.event.issue.title, '(Duplicate Issue)')"
     runs-on: ubuntu-latest
 
     steps:
@@ -20,8 +19,17 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
-          ASSIGNEE: 'ArnavKusurkar' # Replace with actual username or team
+          ASSIGNEE: 'Omkar-Net-Mon' # Replace with actual username or team
         run: |
-          title=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
-          body=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-          gh issue create --repo $REPO --title "$TITLE (New-Issue)" --body "$BODY" --assignee "$ASSIGNEE"
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "${TITLE} (duplicate)" --json number -q '.[] | .number')
+
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "$TITLE (duplicate)" --body "$BODY" --assignee "$ASSIGNEE"
+            echo "Duplicate issue created."
+          else
+            echo "Duplicate issue already exists. No action taken."
+          fi
+
+          
