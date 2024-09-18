@@ -2,11 +2,11 @@ name: Duplicate Issue
 
 on:
   issues:
-    types: [opened]
+    types: [closed]
 
 jobs:
   duplicate_issue:
-    if: "!contains(github.event.issue.title, '(New-Issue)')"
+    if: "contains(github.event.issue.title, '(Duplicate-Issue)')"
     runs-on: ubuntu-latest
 
     steps:
