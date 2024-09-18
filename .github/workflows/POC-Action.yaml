@@ -6,7 +6,7 @@ on:
 
 jobs:
   create_duplicate:
-    if: github.event.issue.labels.*.name contains 'POC' && github.event.action == 'opened'
+    if: contains(github.event.issue.labels.*.name, 'POC') && github.event.action == 'opened'
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
           fi
 
   create_duplicate_after_close:
-    if: github.event.action == 'closed' && github.event.issue.labels.*.name contains 'POC'
+    if: github.event.action == 'closed' && contains(github.event.issue.labels.*.name, 'POC')
     runs-on: ubuntu-latest
 
     steps:
