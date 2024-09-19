@@ -32,33 +32,4 @@ jobs:
           else
             echo "Duplicate issue already exists. No action taken."
           fi
-  duplicate_again:
-    if: github.event.action == 'closed' && contains(github.event.issue.labels.*.name, 'POC') && github.event.issue.state_reason == 'completed'
-    runs-on: ubuntu-latest
-
-    steps:
-      -  name: Checkout the repository
-         uses: actions/checkout@v2
-
-      - name: Authenticate with GitHub CLI
-        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
-
-      - name: Create and Assign Duplicate Issue (Form C)
-        env:
-          REPO: ${{ github.repository }}
-          Form_B_NUMBER: ${{ github.event.issue.number }}  
-          ASSIGNEES: 'Omkar-CyberBay' 
-        run: |
-          TITLE="Follow-up required for Issue #$Form_B_NUMBER"
-          BODY="This issue is created because the previous issue #$Form_B_NUMBER has been marked as completed."
-          EXISTING_CHECK=$(gh issue list --repo $REPO --search "1. ${TITLE}" --json number -q '.[] | .number')
-
-          if [ -z "$EXISTING_CHECK" ]; then
-            gh issue create --repo $REPO --title "1. $TITLE" --body "$BODY" --assignee "$ASSIGNEES"
-            echo "Duplicate issue (Form C) created and assigned to users."
-          else
-            echo "Duplicate issue already exists. No new issue created."
-          fi 
-
-         
-          
+ 
