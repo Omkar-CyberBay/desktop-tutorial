@@ -27,7 +27,7 @@ jobs:
           DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           if [ -z "$DUPLICATE_CHECK" ]; then
-            gh issue create --repo $REPO --title "1. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE" --label "approval, POC"
+            gh issue create --repo $REPO --title "1. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE" --label "approval"
             echo "Duplicate issue created."
           else
             echo "Duplicate issue already exists. No action taken."
