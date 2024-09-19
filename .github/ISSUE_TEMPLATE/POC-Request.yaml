@@ -13,15 +13,13 @@ body:
     attributes:
       label: Customer Name
       placeholder: "Enter Customer name"
-    validations:
-      required: true
+   
   - type: input
     id: cluster-name
     attributes:
       label: Cluster Name
       placeholder: "Cluster name"
-    validations:
-      required: true
+   
   - type: dropdown
     id: region
     attributes:
@@ -30,15 +28,13 @@ body:
         - India
         - US
       default: 0
-    validations:
-      required: true
+  
   - type: input
     id: license-volume
     attributes:
       label: License Volume
       placeholder: "100 GB/Day"
-    validations:
-      required: true
+  
   - type: dropdown
     id: overage-allowed
     attributes:
@@ -47,8 +43,7 @@ body:
         - "Yes"
         - "No"
       default: 0
-    validations:
-      required: true
+   
   - type: dropdown
     id: license-plan
     attributes:
@@ -58,22 +53,19 @@ body:
         - Entereprise
         - Essential
       default: 0
-    validations:
-      required: true
+   
   - type: textarea
     id: devices-list
     attributes:
       label: List of devices to integrate
       placeholder: "Windows servers, Sophos firewall, AD and Linux Servers."
-    validations:
-      required: false
+  
   - type: input
     id: start-date
     attributes:
       label: Setup Start Date
       placeholder: "DD/MM/YYYY"
-    validations:
-      required: true
+  
   - type: checkboxes
     id: log-source
     attributes:
