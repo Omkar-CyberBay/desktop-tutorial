@@ -20,11 +20,11 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
-          ASSIGNEE: 'Omkar-Net-Mon' # Replace with actual username or team
+          ASSIGNEE: 'Omkar-Net-Mon'
         run: |
           TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
           BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
-          DUPLICATE_CHECK=$(gh issue list --repo "$REPO" --search "0. ${TITLE} APPROVAL" --json number -q '.[] | .number')
+          DUPLICATE_CHECK=$(gh issue list --repo "$REPO" --search "${TITLE}" --json number -q '.[] | .number')
 
           if [ -z "$DUPLICATE_CHECK" ]; then
             gh issue create --repo "$REPO" --title "0. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE"
