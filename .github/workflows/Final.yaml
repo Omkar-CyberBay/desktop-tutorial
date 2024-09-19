@@ -33,7 +33,7 @@ jobs:
             echo "Duplicate issue already exists. No action taken."
           fi
   duplicate_again:
-    if: github.event.action == 'closed' && github.event.issue.labels.*.name contains 'POC' && github.event.issue.state_reason == 'completed'
+    if: github.event.action == 'closed' && contains(github.event.issue.labels.*.name, 'POC') && github.event.issue.state_reason == 'completed'
     runs-on: ubuntu-latest
 
     steps:
