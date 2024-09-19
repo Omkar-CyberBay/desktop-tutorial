@@ -6,7 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval')
+    if: contains(github.event.issue.labels.*.name, 'approval') && github.event.issue.state_reason == 'completed'
     runs-on: ubuntu-latest
 
     steps:
