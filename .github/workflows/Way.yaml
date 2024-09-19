@@ -20,9 +20,12 @@ jobs:
         id: check_existing
         run: |
           REPO="${{ github.repository }}"
+          
+          # Get the issue title while properly quoting it
           TITLE=$(gh issue view "${{ github.event.issue.number }}" --repo "$REPO" --json title -q '.title')
+
           # Check for existing issues that match the title and have the POC label
-          EXISTING_ISSUE=$(gh issue list --repo "$REPO" --search "$TITLE" --json number --state open -q '.[] | select(.title == "'$TITLE'") | .number')
+          EXISTING_ISSUE=$(gh issue list --repo "$REPO" --search "$TITLE" --label "POC" --json number --state open -q '.[] | select(.title == $TITLE) | .number')
 
           if [[ -n "$EXISTING_ISSUE" ]]; then
             echo "An existing POC issue was found: #$EXISTING_ISSUE"
@@ -39,6 +42,7 @@ jobs:
           REPO: ${{ github.repository }}
           ASSIGNEE: 'Omkar-Net-Mon'
         run: |
+          # Get the issue title and body while properly quoting
           TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
           BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
           
