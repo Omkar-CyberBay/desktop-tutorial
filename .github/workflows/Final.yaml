@@ -14,22 +14,21 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Authenticate with GitHub CLI
-        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+        run: echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
 
       - name: Duplicate the issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
-          ASSIGNEE: 'Omkar-Net-Mon' 
+          ASSIGNEE: 'Omkar-Net-Mon' # Replace with actual username or team
         run: |
-          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
-          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE} APPROVAL" --json number -q '.[] | .number')
+          TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
+          BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
+          DUPLICATE_CHECK=$(gh issue list --repo "$REPO" --search "0. ${TITLE} APPROVAL" --json number -q '.[] | .number')
 
           if [ -z "$DUPLICATE_CHECK" ]; then
-            gh issue create --repo $REPO --title "0. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE"
+            gh issue create --repo "$REPO" --title "0. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE"
             echo "Duplicate issue created."
           else
             echo "Duplicate issue already exists. No action taken."
           fi
- 
