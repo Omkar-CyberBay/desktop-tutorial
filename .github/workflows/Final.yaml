@@ -2,7 +2,7 @@ name: Duplicate Issue
 
 on:
   issues:
-    types: [opened, closed]
+    types: [opened]
 
 jobs:
   duplicate_issue:
