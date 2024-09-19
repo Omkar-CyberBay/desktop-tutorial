@@ -1,0 +1,64 @@
+name: Duplicate Issue
+
+on:
+  issues:
+    types: [opened, closed]
+
+jobs:
+  duplicate_issue:
+    if: github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'POC')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Duplicate the issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ASSIGNEE: 'Omkar-Net-Mon' 
+        run: |
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE} APPROVAL" --json number -q '.[] | .number')
+
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "0. $TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE"
+            echo "Duplicate issue created."
+          else
+            echo "Duplicate issue already exists. No action taken."
+          fi
+  duplicate_again:
+    if: github.event.action == 'closed' && github.event.issue.labels.*.name contains 'POC' && github.event.issue.state_reason == 'completed'
+    runs-on: ubuntu-latest
+
+    steps:
+      -  name: Checkout the repository
+         uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Create and Assign Duplicate Issue (Form C)
+        env:
+          REPO: ${{ github.repository }}
+          Form_B_NUMBER: ${{ github.event.issue.number }}  
+          ASSIGNEES: 'Omkar-CyberBay' 
+        run: |
+          TITLE="Follow-up required for Issue #$Form_B_NUMBER"
+          BODY="This issue is created because the previous issue #$Form_B_NUMBER has been marked as completed."
+          EXISTING_CHECK=$(gh issue list --repo $REPO --search "1. ${TITLE}" --json number -q '.[] | .number')
+
+          if [ -z "$EXISTING_CHECK" ]; then
+            gh issue create --repo $REPO --title "1. $TITLE" --body "$BODY" --assignee "$ASSIGNEES"
+            echo "Duplicate issue (Form C) created and assigned to users."
+          else
+            echo "Duplicate issue already exists. No new issue created."
+          fi 
+
+         
+          
