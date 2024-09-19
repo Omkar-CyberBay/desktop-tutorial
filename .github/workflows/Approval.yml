@@ -6,6 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
+    if: contains(github.event.issue.lables.*.name, 'POC')
     runs-on: ubuntu-latest
 
     steps:
