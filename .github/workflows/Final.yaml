@@ -5,7 +5,7 @@ on:
     types: [opened]  
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'POC') && startsWith(github.event.issue.title, '0.')
+    if: contains(github.event.issue.labels.*.name, 'POC')
     runs-on: ubuntu-latest
 
     steps:
