@@ -16,6 +16,15 @@ jobs:
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
 
+      - name: Check Duplicate Issue
+        run: |
+          if [ -z "$DUPLICATE_CHECK" ]; then
+            gh issue create --repo $REPO --title "0.$TITLE Approval" --body "$BODY" --assignee "$ASSIGNEE"
+            echo "Duplicate issue created."
+          else
+            echo "Duplicate issue already exists. No action taken."
+          fi 
+
       - name: Duplicate the issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -26,11 +35,5 @@ jobs:
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
           DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0.${TITLE} Approval" --json number -q '.[] | .number')
 
-          if [ -z "$DUPLICATE_CHECK" ]; then
-            gh issue create --repo $REPO --title "0.$TITLE Approval" --body "$BODY" --assignee "$ASSIGNEE"
-            echo "Duplicate issue created."
-          else
-            echo "Duplicate issue already exists. No action taken."
-          fi
-
+         
           
