@@ -1,0 +1,47 @@
+name: Duplicate Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  duplicate_issue:
+    if: contains(github.event.issue.labels.*.name, 'POC') && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+
+      - name: Check for Existing POC Issues
+        id: check_existing
+        run: |
+          REPO="${{ github.repository }}"
+          TITLE=$(gh issue view "${{ github.event.issue.number }}" --repo "$REPO" --json title -q '.title')
+          # Check for existing issues that match the title and have the POC label
+          EXISTING_ISSUE=$(gh issue list --repo "$REPO" --search "$TITLE" --json number --state open -q '.[] | select(.title == "'$TITLE'") | .number')
+
+          if [[ -n "$EXISTING_ISSUE" ]]; then
+            echo "An existing POC issue was found: #$EXISTING_ISSUE"
+            echo "existing_issue=$EXISTING_ISSUE" >> $GITHUB_ENV
+          else
+            echo "No existing POC issues found."
+            echo "existing_issue=null" >> $GITHUB_ENV
+          fi
+
+      - name: Create Duplicate Issue
+        if: env.existing_issue == 'null'
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ASSIGNEE: 'Omkar-Net-Mon'
+        run: |
+          TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
+          BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
+          
+          # Create the new issue with the appropriate details
+          gh issue create --repo "$REPO" --title "1.$TITLE APPROVAL" --body "$BODY" --assignee "$ASSIGNEE" --label "POC"
+          echo "Duplicate issue created."
