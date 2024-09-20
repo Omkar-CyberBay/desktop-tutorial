@@ -6,7 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval') && (github.event.issue.state_reason == 'completed' || github.event.issue.state_reason == 'not_planned')
+    if: contains(github.event.issue.labels.*.name, 'approval')
     runs-on: ubuntu-latest
 
     steps:
@@ -15,8 +15,13 @@ jobs:
 
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+      - name: Get Issue State Reason
+        id: get_state_reason
+        run: |
+          STATE_REASON=$(gh issue view $ISSUE_NUMBER --repo $REPO --json stateReason -q '.stateReason')
+          echo "STATE_REASON=${STATE_REASON}" >> $GITHUB_ENV
 
-      - name: Duplicate the issue
+      - name: Conditional Duplicate Issue Creation
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
@@ -24,14 +29,18 @@ jobs:
         run: |
           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-          # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
-          if [[ "${{github.event.issue.state_reason}}" == "completed" ]]; then
-            gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
+          # Check the state reason
+          if [[ "$STATE_REASON" == "completed" ]]; then
+            # Create Form C if state_reason is completed
+            gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "license"
             echo "Duplicate issue created."
-          else [[ "${{ github.event.issue.state_reason}}" == "not_planned" ]]; then
-            echo "No Duplicate Issue created as the state reason is not_planned."
+          elif [[ "$STATE_REASON" == "not_planned" ]]; then
+            # Log that no duplicate will be created
+            echo "No duplicate issue created as the state reason is 'not_planned'."
+          else
+            echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
           fi
 
-         
-          
+
+     
