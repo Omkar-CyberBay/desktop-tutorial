@@ -6,7 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval') && github.event.issue.state_reason == 'completed'
+    if: contains(github.event.issue.labels.*.name, 'approval') && (github.event.issue.state_reason == 'completed' || github.event.issue.state_reason == 'not_planned')
     runs-on: ubuntu-latest
 
     steps:
@@ -26,12 +26,12 @@ jobs:
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
-          # if [ -z "$DUPLICATE_CHECK" ]; then
+          if [["${{github.event.issue.state_reason}}" == "completed"]]; then
             gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
             echo "Duplicate issue created."
-          # else
-          #  echo "Duplicate issue already exists. No action taken."
-          # fi 
+          elseif [["${{ github.event.issue.state_reason}}" == "not_planned"]]; then
+            echo "No Duplicate Issue created as the state reason is not_planned."
+          fi 
 
          
           
