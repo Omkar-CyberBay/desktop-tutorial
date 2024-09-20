@@ -11,14 +11,14 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
       - name: Get Issue State Reason
         id: get_state_reason
         run: |
-          STATE_REASON=$(gh issue view $ISSUE_NUMBER --repo $REPO --json stateReason -q '.stateReason')
+          STATE_REASON=$(gh issue view $ISSUE_NUMBER --repo $REPO --json stateReason --jq '.stateReason')
           echo "STATE_REASON=${STATE_REASON}" >> $GITHUB_ENV
 
       - name: Conditional Duplicate Issue Creation
