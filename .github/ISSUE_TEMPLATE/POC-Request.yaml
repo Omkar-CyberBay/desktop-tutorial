@@ -1,7 +1,7 @@
 name: Request a POC
 description: Request POC for a new customer.
 title: "[POC]:"
-labels: ["POC", "approval"]
+labels: ["POC"]
 # projects: ["bloo-team/30", "bloo-team/12"]
 body:
   - type: markdown
