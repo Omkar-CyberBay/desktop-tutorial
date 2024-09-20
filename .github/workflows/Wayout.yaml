@@ -24,14 +24,14 @@ jobs:
         run: |
           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-          DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
+          # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
-          if [ -z "$DUPLICATE_CHECK" ]; then
+          # if [ -z "$DUPLICATE_CHECK" ]; then
             gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
             echo "Duplicate issue created."
-          else
-            echo "Duplicate issue already exists. No action taken."
-          fi 
+          # else
+          #  echo "Duplicate issue already exists. No action taken."
+          # fi 
 
          
           
