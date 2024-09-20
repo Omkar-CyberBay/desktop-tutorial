@@ -27,11 +27,9 @@ jobs:
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
-            # Create Form C if state_reason is completed
-            gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "license"
+            gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
             echo "Duplicate issue created."
           elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
-            # Log that no duplicate will be created
             echo "No duplicate issue created as the state reason is 'not_planned'."
           else
             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
