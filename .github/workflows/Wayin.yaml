@@ -49,7 +49,7 @@ jobs:
           ORIGINAL_ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
 
-         run: |
+        run: |
           gh issue edit $ORIGINAL_ISSUE_NUMBER --repo $REPO --state closed
           echo "Original issue POC is closed due to status as not planned."
 
