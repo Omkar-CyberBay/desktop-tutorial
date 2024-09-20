@@ -20,15 +20,17 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
-          ASSIGNEE: 'Omkar-Net-Mon' 
+          ASSIGNEE1: 'Omkar-Net-Mon' 
+          ASSIGNEE2: 'Omkar-CyberBay'
         run: |
           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
-            gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
-            echo "Duplicate issue created."
+            gh issue create --repo $REPO --title "2. $TITLE LISENCE" --body "$BODY" --assignee "$ASSIGNEE1" --label "lisence"
+            gh issue create --repo $REPO --title "3. $TITLE CLOUD" --body "$BODY" --assignee "$ASSIGNEE2" --label "cloud"
+            echo "Duplicate issues created."
           elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
             echo "No duplicate issue created as the state reason is 'not_planned'."
           else
