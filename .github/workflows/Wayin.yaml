@@ -29,10 +29,8 @@ jobs:
           if [[ "${{github.event.issue.state_reason}}" == "completed" ]]; then
             gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "lisence"
             echo "Duplicate issue created."
-          elseif [[ "${{ github.event.issue.state_reason}}" == "not_planned" ]]; then
+          else [[ "${{ github.event.issue.state_reason}}" == "not_planned" ]]; then
             echo "No Duplicate Issue created as the state reason is not_planned."
-          else
-            echo "UNDO"
           fi
 
          
