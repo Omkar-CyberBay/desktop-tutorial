@@ -6,41 +6,37 @@ on:
 
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval')
+    if: contains(github.event.issue.labels.*.name, 'approval') 
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Authenticate with GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
-      - name: Get Issue State Reason
-        id: get_state_reason
-        run: |
-          STATE_REASON=$(gh issue view $ISSUE_NUMBER --repo $REPO --json stateReason --jq '.stateReason')
-          echo "STATE_REASON=${STATE_REASON}" >> $GITHUB_ENV
 
-      - name: Conditional Duplicate Issue Creation
+      - name: Duplicate the issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
           ASSIGNEE: 'Omkar-Net-Mon' 
         run: |
-          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title --jq '.title')
-          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body --jq '.body')
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+          # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
-          # Check the state reason
-          if [[ "$STATE_REASON" == "completed" ]]; then
+          if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
             # Create Form C if state_reason is completed
             gh issue create --repo $REPO --title "2. $TITLE SPLIT" --body "$BODY" --assignee "$ASSIGNEE" --label "license"
             echo "Duplicate issue created."
-          elif [[ "$STATE_REASON" == "not_planned" ]]; then
+          elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
             # Log that no duplicate will be created
             echo "No duplicate issue created as the state reason is 'not_planned'."
           else
             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
           fi
 
-
-     
+        
+         
+          
