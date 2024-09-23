@@ -23,8 +23,8 @@ jobs:
           ASSIGNEE: 'Omkar-Net-Mon' 
         run: |
           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
-          IFS='.' && read -ra arr <<< "$TITLE")
-          ParsedTitle = ${TITLE[1]}
+          IFS='.' && read -ra titleArray <<< "$TITLE")
+          TITLE = ${titleArray[1]}
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
