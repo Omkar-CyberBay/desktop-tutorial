@@ -1,7 +1,7 @@
 name: Request a POC
 description: Request POC for a new customer.
 title: "-"
-placeholder: "Enter The required title"
+placeholder: Enter The required title
 labels: ["POC"]
 # projects: ["bloo-team/30", "bloo-team/12"]
 body:
