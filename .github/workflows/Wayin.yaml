@@ -28,8 +28,8 @@ jobs:
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
-            gh issue create --repo $REPO --title "2.$TITLE:(LISENCE)" --body "$BODY" --assignee "$ASSIGNEE1" --label "lisence"
-            gh issue create --repo $REPO --title "3.$TITLE:(CLOUD)" --body "$BODY" --assignee "$ASSIGNEE2" --label "cloud"
+            gh issue create --repo $REPO --title "2.$TITLE (LISENCE)" --body "$BODY" --assignee "$ASSIGNEE1" --label "lisence"
+            gh issue create --repo $REPO --title "3.$TITLE (CLOUD)" --body "$BODY" --assignee "$ASSIGNEE2" --label "cloud"
             echo "Duplicate issues created."
           elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
             echo "No duplicate issue created as the state reason is 'not_planned'."
