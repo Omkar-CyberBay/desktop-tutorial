@@ -3,10 +3,7 @@ name: Split Issue
 on:
   issues:
     types: [closed]
-
-jobs:
-  split_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '1.0.[POC]:') && github.event.issue.state_reason == "completed"
+    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '1.0.[POC]:') && (github.event.issue.state_reason == 'completed')
     runs-on: ubuntu-latest
 
     steps:
