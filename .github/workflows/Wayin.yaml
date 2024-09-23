@@ -6,7 +6,7 @@ on:
 
 jobs:
   split_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '[1.POC]:')
+    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '1.[POC]:')
     runs-on: ubuntu-latest
 
     steps:
