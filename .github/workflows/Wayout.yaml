@@ -6,7 +6,7 @@ on:
 
 jobs:
   ended_issue:
-    if: contains(github.event.issue.labels.*.name, 'lisence') && contains(github.event.issue.labels.*.name, 'cloud') && github.event.issue.state_reason == 'completed' 
+    if: github.event.issue.state_reason == 'completed' && contains(github.event.issue.labels.*.name, 'lisence') || contains(github.event.issue.labels.*.name, 'cloud')
     runs-on: ubuntu-latest
 
     steps:
