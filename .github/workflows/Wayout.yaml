@@ -6,7 +6,7 @@ on:
 
 jobs:
   end_issue:
-    if: contains(github.event.issue.labels.*.name, 'lisence') && ontains(github.event.issue.labels.*.name, 'cloud')
+    if: contains(github.event.issue.labels.*.name, 'lisence') && contains(github.event.issue.labels.*.name, 'cloud')
     runs-on: ubuntu-latest
 
     steps:
