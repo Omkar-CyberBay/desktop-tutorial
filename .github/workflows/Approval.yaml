@@ -1,11 +1,11 @@
-name: Duplicate Issue
+name: Approval Issue
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  duplicate_issue:
+  approval_issue:
     if: startsWith(github.event.issue.title, '0.[POC]:')
     runs-on: ubuntu-latest
 
