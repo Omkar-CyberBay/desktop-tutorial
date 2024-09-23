@@ -1,0 +1,44 @@
+name: End Issue
+
+on:
+  issues:
+    type: [closed]
+
+jobs:
+  end_issue:
+    if: contains(github.event.issue.labels.*.name, 'lisence', 'cloud') && startsWith(github.issue.title, '[2.POC]', '[3.POC]')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
+      - name: Duplicate the issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          ASSIGNEE: 'Omkar-CyberBay'
+        run: |
+          TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+          BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+
+          if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
+            gh issue create --repo $REPO --title "[4.POC]:(DARC)" --body "$BODY" --assignee "$ASSIGNEE" --label "darc"
+            echo "Duplicate issues created."
+          elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
+            echo "No duplicate issue created as the state reason is 'not_planned'."
+          else
+            echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
+          fi
+
+
+          
+
+
+          
+    
+    
+  
