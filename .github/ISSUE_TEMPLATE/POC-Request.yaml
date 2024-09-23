@@ -2,6 +2,8 @@ name: Request a POC
 description: Request POC for a new customer.
 title: "0.[POC]:"
 labels: "POC"
+assignees:
+  - Omkar-CyberBay
 # projects: ["bloo-team/30", "bloo-team/12"]
 body:
   - type: markdown
