@@ -6,7 +6,7 @@ on:
 
 jobs:
   duplicate_issue:
-    if: contains(github.event.issue.labels.*.name, 'POC') && startsWith(github.event.issue.title, '0.[POC]:')
+    if: startsWith(github.event.issue.title, '0.[POC]:')
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,7 @@ jobs:
           # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           # if [ -z "$DUPLICATE_CHECK" ]; then
-            gh issue create --repo $REPO --title "1.$TITLE" --body "$BODY" --assignee "$ASSIGNEE" --label "approval"
+            gh issue create --repo $REPO --title "1.$TITLE" --body "$BODY" --assignee "$ASSIGNEE" --label "POC"
             echo "Duplicate issue created."
           # else
           #   echo "Duplicate issue already exists. No action taken."
