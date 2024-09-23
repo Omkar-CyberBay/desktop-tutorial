@@ -6,7 +6,7 @@ on:
 
 jobs:
   split_issue:
-    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '1.[POC]:')
+    if: contains(github.event.issue.labels.*.name, 'approval') && startsWith(github.event.issue.title, '1.0.[POC]:') && github.event.issue.state_reason == "completed"
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,6 @@ jobs:
         run: |
           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-          # DUPLICATE_CHECK=$(gh issue list --repo $REPO --search "0. ${TITLE}" --json number -q '.[] | .number')
 
           if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
             gh issue create --repo $REPO --title "2.$TITLE" --body "$BODY" --assignee "$ASSIGNEE1" --label "lisence"
