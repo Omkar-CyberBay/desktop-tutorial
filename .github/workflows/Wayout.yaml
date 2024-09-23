@@ -6,7 +6,7 @@ on:
 
 jobs:
   end_issue:
-    if: contains(github.event.issue.labels.*.name, 'lisence', 'cloud') && startsWith(github.issue.title, '[2.POC]', '[3.POC]')
+    if: startsWith(github.issue.title, '[2.POC]') && startsWith(github.issue.title, '[3.POC]')  
     runs-on: ubuntu-latest
 
     steps:
