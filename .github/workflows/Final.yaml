@@ -6,7 +6,7 @@ on:
 
 jobs:
   final_issue:
-    if: startsWith(github.event.issue.title, '2.[POC]:') && (github.event.issue.state_reason == 'completed')
+    if: startsWith(github.event.issue.title, '2.[POC]:')
     runs-on: ubuntu-latest
 
     steps:
