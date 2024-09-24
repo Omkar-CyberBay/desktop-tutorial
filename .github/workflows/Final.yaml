@@ -6,7 +6,7 @@ on:
 
 jobs:
   final_issue:
-    if: startsWith(github.event.issue.title, '2.[POC]:')
+    if: startsWith(github.event.issue.title, '2.[POC]:') && (github.event.issue.state_reason == 'completed')
     runs-on: ubuntu-latest
 
     steps:
@@ -33,9 +33,9 @@ jobs:
            if [[ "$ISSUE_CHECK1" == "completed" && "$ISSUE_CHECK2" == "completed" ]]; then
             gh issue create --repo $REPO --title "3.$TITLE (DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
             echo "Both issues 2.[POC]and 2.[POC] are 'completed'."
-           elseif [[ "$ISSUE_CHECK1" == "completed" || "$ISSUE_CHECK2" == "not_planned" ]]; then
+           elif [[ "$ISSUE_CHECK1" == "completed" || "$ISSUE_CHECK2" == "not_planned" ]]; then
             echo "No duplicate issue created as the statereason is 'not_planned'."
-           elseif [[ "$ISSUE_CHECK1" == "not_planned" || "$ISSUE_CHECK2" == "completed" ]]; then
+           elif [[ "$ISSUE_CHECK1" == "not_planned" || "$ISSUE_CHECK2" == "completed" ]]; then
             echo "No duplicate issue created as the statereason is 'not_planned'."
            else
             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
