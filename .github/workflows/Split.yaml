@@ -30,7 +30,7 @@ jobs:
 
           if [[ "${{ github.event.issue.state_reason }}" == "completed" ]]; then
             gh issue create --repo $REPO --title "2.$TITLE (LISENCE)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
-            gh issue create --repo $REPO --title "2.$TITLE (CLOUD)" --body "$BODY" --assignee "$ASSIGNEE2" --label "POC"
+            gh issue create --repo $REPO --title "3.$TITLE (CLOUD)" --body "$BODY" --assignee "$ASSIGNEE2" --label "POC"
             echo "Duplicate issues created."
           elif [[ "${{ github.event.issue.state_reason }}" == "not_planned" ]]; then
             echo "No duplicate issue created as the state reason is 'not_planned'."
