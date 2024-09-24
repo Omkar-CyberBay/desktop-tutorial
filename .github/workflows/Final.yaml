@@ -25,9 +25,9 @@ jobs:
            IFS='.' && read -ra titleArray <<< "$TITLE"
            TITLE=${titleArray[1]}
            BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-           ISSUE_CHECK1=$(gh issue list --repo $REPO --search "2.$TITLE (LISENCE)" --json stateReason -q '.[0].stateReason')
+           ISSUE_CHECK1=$(gh issue list --repo $REPO --search "2.$TITLE (LISENCE)" --json stateReason -q '.stateReason')
            echo "ISSUE_CHECK1: '$ISSUE_CHECK1'"
-           ISSUE_CHECK2=$(gh issue list --repo $REPO --search "2.$TITLE (CLOUD)" --json stateReason -q '.[0].stateReason')
+           ISSUE_CHECK2=$(gh issue list --repo $REPO --search "2.$TITLE (CLOUD)" --json stateReason -q '.stateReason')
            echo "ISSUE_CHECK2: '$ISSUE_CHECK2'"
         
 
