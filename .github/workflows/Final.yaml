@@ -6,7 +6,7 @@ on:
 
 jobs:
   final_issue:
-    if: startsWith(github.event.issue.title, '2.[POC]:')
+    if: startsWith(github.event.issue.title, '2.[POC]:') && startsWith(github.event.issue.title, '3.[POC]:')
     runs-on: ubuntu-latest
 
     steps:
@@ -25,18 +25,18 @@ jobs:
            IFS='.' && read -ra titleArray <<< "$TITLE"
            TITLE=${titleArray[1]}
            BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
-           ISSUE_CHECK1=$(gh issue view $ISSUE_NUMBER --repo $REPO --search "2.$TITLE (LISENCE)" --state all --json stateReason -q '.[].stateReason')
+           ISSUE_CHECK1=$(gh issue view "$ISSUE_NUMBER" --repo "Omkar-CyberBay/desktop-tutorial" --json stateReason -q '.stateReason')
            echo "ISSUE_CHECK1: '$ISSUE_CHECK1'"
-           ISSUE_CHECK2=$(gh issue view $ISSUE_NUMBER --repo "Omkar-CyberBay/desktop-tutorial" --search "2.$TITLE (CLOUD)" --state all --json stateReason -q '.[].stateReason')
+           ISSUE_CHECK2=$(gh issue view "$ISSUE_NUMBER" --repo "Omkar-CyberBay/desktop-tutorial" --json stateReason -q '.stateReason')
            echo "ISSUE_CHECK2: '$ISSUE_CHECK2'"
         
 
-           if [[ "$ISSUE_CHECK1" == "completed" && "$ISSUE_CHECK2" == "completed" ]]; then
-            gh issue create --repo $REPO --title "3.$TITLE (DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
+           if [[ "$ISSUE_CHECK1" == "COMPLETED" && "$ISSUE_CHECK2" == "COMPLETED" ]]; then
+            gh issue create --repo $REPO --title "4.$TITLE (DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
             echo "Both issues 2.[POC]and 2.[POC] are 'completed'."
-           elif [[ "$ISSUE_CHECK1" == "completed" || "$ISSUE_CHECK2" == "not_planned" ]]; then
+           elif [[ "$ISSUE_CHECK1" == "COMPLETED" || "$ISSUE_CHECK2" == "NOT_PLANNED" ]]; then
             echo "No duplicate issue created as the statereason is 'not_planned'."
-           elif [[ "$ISSUE_CHECK1" == "not_planned" || "$ISSUE_CHECK2" == "completed" ]]; then
+           elif [[ "$ISSUE_CHECK1" == "NOT_PLANNED" || "$ISSUE_CHECK2" == "COMPLETED" ]]; then
             echo "No duplicate issue created as the statereason is 'not_planned'."
            else
             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
