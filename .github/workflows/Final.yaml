@@ -15,5 +15,40 @@ jobs:
 
        - name: Authenticate with GitHub CLI
          run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+       - name: One last Duplicate issue
+         env:
+            ISSUE_NUMBER: ${{ github.event.issue.number }}
+            REPO: ${{ github.repository }}
+            ASSIGNEE1: 'Omkar-Net-Mon' 
+         run: |
+           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title')
+           IFS='.' && read -ra titleArray <<< "$TITLE"
+           TITLE=${titleArray[1]}
+           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+           ISSUE_CHECK1=$(gh issue list --repo $REPO --search "2.$TITLE (LISENCE)" --json state,stateReason -q '.[].stateReason')
+           ISSUE_CHECK2=$(gh issue list --repo $REPO --search "2.$TITLE (CLOUD)" --json state,stateReason -q '.[].stateReason')
+           echo "ISSUE_CHECK1 State Reason: $ISSUE_CHECK1"
+           echo "ISSUE_CHECK2 State Reason: $ISSUE_CHECK2"
+
+           if [[ "$ISSUE_CHECK1" == "completed" && "$ISSUE_CHECK2" == "completed" ]]; then
+            gh issue create --repo $REPO --title "3.$TITLE (DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC
+            echo "Both issues 2.[POC]and 2.[POC] are completed."
+           elseif [[ "$ISSUE_CHECK1" == "completed" && "$ISSUE_CHECK2" == "not_planned" ]]; then
+            echo "No duplicate issue created as the statereason is "not_planned."
+           elseif [[ "$ISSUE_CHECK1" == "not_planned" && "$ISSUE_CHECK2" == "completed" ]]; then
+            echo "No duplicate issue created as the statereason is "not_planned."
+           else
+            echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
+           fi
+
+     
+
+
+           
+           
+
+         
+           
+      
 
       
