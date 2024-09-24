@@ -21,9 +21,9 @@ jobs:
             REPO: ${{ github.repository }}
             ASSIGNEE1: 'Omkar-Net-Mon' 
          run: |
-           TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title[0]')
-           IFS='.' && read -ra titleArray <<< "$TITLE"
-           TITLE=${titleArray[1]}
+           #TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q '.title[0]')
+           #IFS='.' && read -ra titleArray <<< "$TITLE"
+           #TITLE=${titleArray[1]}
            BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
            ISSUE_CHECK1=$(gh issue view "$ISSUE_NUMBER" --repo "Omkar-CyberBay/desktop-tutorial" --json stateReason -q '.stateReason')
            echo "ISSUE_CHECK1: '$ISSUE_CHECK1'"
