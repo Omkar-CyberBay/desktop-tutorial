@@ -1,0 +1,49 @@
+name: Final Issue
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  final_issue:
+    if: startsWith(github.event.issue.title, '2.[POC]:') && (github.event.issue.state_reason == 'completed')
+    runs-on: ubuntu-latest
+
+    steps:
+       - name: Checkout the repository
+         uses: actions/checkout@v2
+
+       - name: Authenticate with GitHub CLI
+         run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+       - name: One last Duplicate issue
+         env:
+            ISSUE_NUMBER: ${{ github.event.issue.number }}
+            REPO: ${{ github.repository }}
+            ASSIGNEE1: 'Omkar-Net-Mon' 
+         run: |
+           TITLE1=$(gh issue list --repo "Omkar-CyberBay/desktop-tutorial" --search "$TITLE" --json title -q '.[0].title')
+           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+           IFS='-' && read -ra titleArray <<< "$TITLE1"
+           TI1=${titleArray[0]}
+           TI2=${titleArray[1]}
+           STATE_REASON=$(gh issue list --search "$TI1" --repo Omkar-CyberBay/desktop-tutorial --json stateReason,title,state -s closed -q '.[0].stateReason')
+           FINAL="${TI0}"
+           
+           if [[ "$STATE_REASON" == "COMPLETED" ]]; then
+            gh issue create --repo $REPO --title "$FINAL -(DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
+            echo "Both issue are 'completed'."
+           elif [[ "STATE_REASON" == "NOT_PLANNED" ]]; then
+            echo "not_planned"
+           else:
+             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
+           fi
+
+
+           
+           
+
+         
+           
+      
+
+      
