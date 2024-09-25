@@ -22,27 +22,28 @@ jobs:
             REPO: ${{ github.repository }}
             ASSIGNEE1: 'Omkar-Net-Mon' 
          run: |
-           # Retrieve the title of the issue
-           TITLE1=$(gh issue list --repo "$REPO" --search "$TITLE" --json title -q '.[0].title')
-           
-           # Retrieve the body of the issue
-           BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
-           
-           # Split the title after '-'
-           IFS='-' read -ra titleArray <<< "$TITLE1"
-           TI1=${titleArray[0]}
-           TI2=${titleArray[1]}
-           
-           # Fetch the state reason
-           STATE_REASON=$(gh issue list --search "$TI1" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
-           FINAL="$TI1" # Correct this; change TI0 to TI1
-           
-           # Conditional actions based on STATE_REASON
-           if [[ "$STATE_REASON" == "COMPLETED" ]]; then
-               gh issue create --repo "$REPO" --title "$FINAL -(DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
-               echo "Both issues are 'completed'."
-           elif [[ "$STATE_REASON" == "NOT_PLANNED" ]]; then
-               echo "not_planned"
-           else
-               echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
-           fi
+            # Retrieve the title of the issue
+            TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.[0].title')
+            
+            # Retrieve the body of the issue
+            BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
+            
+            # Split the title after '-'
+            IFS='-' read -ra titleArray <<< "$TITLE"
+            TI1=${titleArray[0]}
+            FINAL="$TI1-(CLOUD)"
+            echo "Final: $FINAL"
+            
+            # Fetch the state reason
+            STATE_REASON=$(gh issue list --search "$TI1-(CLOUD)" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
+            echo "State reason: $STATE_REASON"
+            
+            # Conditional actions based on STATE_REASON
+            if [[ "$STATE_REASON" == "COMPLETED" ]]; then
+              gh issue create --repo "$REPO" --title "$TI1 -(DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
+              echo "Both issues are 'completed'."
+            elif [[ "$STATE_REASON" == "NOT_PLANNED" ]]; then
+              echo "not_planned"
+            else
+              echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
+            fi
