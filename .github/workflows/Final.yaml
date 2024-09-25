@@ -23,7 +23,7 @@ jobs:
             ASSIGNEE1: 'Omkar-Net-Mon' 
          run: |
             # Retrieve the title of the issue
-            TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.[0].title')
+            TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
             
             # Retrieve the body of the issue
             BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
@@ -35,7 +35,7 @@ jobs:
             echo "Final: $FINAL"
             
             # Fetch the state reason
-            STATE_REASON=$(gh issue list --search "$TI1-(CLOUD)" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
+            STATE_REASON=$(gh issue list --search "$FINAL" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
             echo "State reason: $STATE_REASON"
             
             # Conditional actions based on STATE_REASON
