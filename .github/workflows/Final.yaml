@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       - name: Checkout the repository
-         uses: actions/checkout@v2
-
        - name: Authenticate with GitHub CLI
          run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
 
@@ -21,6 +18,8 @@ jobs:
             ISSUE_NUMBER: ${{ github.event.issue.number }}
             REPO: ${{ github.repository }}
             ASSIGNEE1: 'Omkar-Net-Mon' 
+            TYPE1: '(CLOUD)'
+            TYPE2: '(LISENCE)'
          run: |
             # Retrieve the title of the issue
             TITLE=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title -q '.title')
@@ -31,7 +30,16 @@ jobs:
             # Split the title after '-'
             IFS='-' read -ra titleArray <<< "$TITLE"
             TI1=${titleArray[0]}
-            FINAL="$TI1-(CLOUD)"
+            TI2=${titleArray[1]}
+            
+            if [[ "$TI2" == "$TYPE1" ]]; then
+              FINAL="$TI1-$TYPE2"
+            elif [[ "$TI2" == "$TYPE2" ]]; then
+              FINAL="$TI1-$TYPE1"
+            else
+              echo "Types doesn't match"
+            fi
+            
             echo "Final: $FINAL"
             
             # Fetch the state reason
