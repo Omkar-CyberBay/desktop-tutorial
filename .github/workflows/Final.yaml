@@ -35,7 +35,7 @@ jobs:
             echo "Final: $FINAL"
             
             # Fetch the state reason
-            STATE_REASON=$(gh issue list --search "$FINAL" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
+            STATE_REASON=$(gh issue list --search "in:title $FINAL" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
             echo "State reason: $STATE_REASON"
             
             # Conditional actions based on STATE_REASON
