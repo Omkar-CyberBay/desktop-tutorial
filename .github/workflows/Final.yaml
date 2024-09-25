@@ -21,12 +21,12 @@ jobs:
             REPO: ${{ github.repository }}
             ASSIGNEE1: 'Omkar-Net-Mon' 
          run: |
-           TITLE1=$(gh issue list --repo $REPO --search "$TITLE" --json title -q '.[0].title')
-           BODY=$(gh issue view $ISSUE_NUMBER --repo $REPO --json body -q '.body')
+           TITLE1=$(gh issue list --repo "$REPO" --search "$TITLE" --json title -q '.[0].title')
+           BODY=$(gh issue view $ISSUE_NUMBER --repo "$REPO" --json body -q '.body')
            IFS='-' && read -ra titleArray <<< "$TITLE1"
            TI1=${titleArray[0]}
            TI2=${titleArray[1]}
-           STATE_REASON=$(gh issue list --search "$TI1" --repo $REPO --json stateReason,title,state -s closed -q '.[0].stateReason')
+           STATE_REASON=$(gh issue list --search "$TI1" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
            FINAL="${TI0}"
            
            if [[ "$STATE_REASON" == "COMPLETED" ]]; then
