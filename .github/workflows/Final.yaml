@@ -15,35 +15,34 @@ jobs:
 
        - name: Authenticate with GitHub CLI
          run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
+
        - name: One last Duplicate issue
          env:
             ISSUE_NUMBER: ${{ github.event.issue.number }}
             REPO: ${{ github.repository }}
             ASSIGNEE1: 'Omkar-Net-Mon' 
          run: |
+           # Retrieve the title of the issue
            TITLE1=$(gh issue list --repo "$REPO" --search "$TITLE" --json title -q '.[0].title')
-           BODY=$(gh issue view $ISSUE_NUMBER --repo "$REPO" --json body -q '.body')
-           IFS='-' && read -ra titleArray <<< "$TITLE1"
+           
+           # Retrieve the body of the issue
+           BODY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body -q '.body')
+           
+           # Split the title after '-'
+           IFS='-' read -ra titleArray <<< "$TITLE1"
            TI1=${titleArray[0]}
            TI2=${titleArray[1]}
+           
+           # Fetch the state reason
            STATE_REASON=$(gh issue list --search "$TI1" --repo "$REPO" --json stateReason,title,state -s closed -q '.[0].stateReason')
-           FINAL="${TI0}"
+           FINAL="$TI1" # Correct this; change TI0 to TI1
            
+           # Conditional actions based on STATE_REASON
            if [[ "$STATE_REASON" == "COMPLETED" ]]; then
-            gh issue create --repo $REPO --title "$FINAL -(DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
-            echo "Both issue are 'completed'."
-           elif [[ "STATE_REASON" == "NOT_PLANNED" ]]; then
-            echo "not_planned"
-           else:
-             echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
+               gh issue create --repo "$REPO" --title "$FINAL -(DARC)" --body "$BODY" --assignee "$ASSIGNEE1" --label "POC"
+               echo "Both issues are 'completed'."
+           elif [[ "$STATE_REASON" == "NOT_PLANNED" ]]; then
+               echo "not_planned"
+           else
+               echo "State reason is neither 'completed' nor 'not_planned'. No action taken."
            fi
-
-
-           
-           
-
-         
-           
-      
-
-      
