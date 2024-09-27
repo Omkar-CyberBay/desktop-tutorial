@@ -13,7 +13,7 @@ jobs:
        - name: Authenticate with GitHub CLI
          run: gh auth login --with-token <<< "${{ secrets.GH_TOKEN }}"
 
-       - name: One last Duplicate issue
+       - name: Final issue
          env:
             ISSUE_NUMBER: ${{ github.event.issue.number }}
             REPO: ${{ github.repository }}
