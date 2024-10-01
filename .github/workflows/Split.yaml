@@ -8,6 +8,12 @@ jobs:
   split-issue:
     if: startsWith(github.event.issue.title, '1.[POC]:') && (github.event.issue.state_reason == 'completed')
     runs-on: ubuntu-latest
+    env:
+      ASSIGNEE1: 'YOUR_DEFAULT_ASSIGNEE_1'  # Set your default assignee 1 here
+      ASSIGNEE2: 'YOUR_DEFAULT_ASSIGNEE_2'  # Set your default assignee 2 here
+      LABEL: 'POC'                          # Change this label as needed
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}     # Secure token for GitHub CLI
+
 
     steps:
       - name: Checkout the repository
