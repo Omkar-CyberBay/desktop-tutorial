@@ -8,6 +8,11 @@ jobs:
   approval_issue:
     if: startsWith(github.event.issue.title, '0.[POC]:')
     runs-on: ubuntu-latest
+    env:
+      ASSIGNEE: 'YOUR_DEFAULT_ASSIGNEE'  # Set your default assignee here
+      LABEL: 'POC'                        # Change this label as needed
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}   # Secure token for GitHub CLI
+
 
     steps:
       - name: Checkout the repository
