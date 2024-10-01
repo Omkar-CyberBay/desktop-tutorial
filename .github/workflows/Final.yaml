@@ -8,6 +8,14 @@ jobs:
   final_issue:
     if: startsWith(github.event.issue.title, '2.[POC]:') && (github.event.issue.state_reason == 'completed')
     runs-on: ubuntu-latest
+    env:
+      ASSIGNEE1: 'YOUR_DEFAULT_ASSIGNEE'   # Set your default assignee here
+      TYPE1: '(CLOUD)'                      # Set the first type here
+      TYPE2: '(LICENSE)'                    # Set the second type here
+      LABEL: 'POC'                          # Change this label as needed
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}     # Secure token for GitHub CLI
+
+    
 
     steps:
        - name: Authenticate with GitHub CLI
